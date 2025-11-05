@@ -1,7 +1,7 @@
 package net
 
 import (
-	"common/errs"
+	"github.com/kdaxx/common/errs"
 	"io"
 	"net"
 	"sync"
