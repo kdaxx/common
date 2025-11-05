@@ -3,6 +3,7 @@ package io
 import (
 	"errors"
 	"net"
+	"sync"
 	"time"
 )
 
@@ -14,7 +15,7 @@ type BlockingQueue[T any] struct {
 	enqueueCh chan T
 	dequeueCh chan chan T
 	closeCh   chan struct{}
-	closed    bool
+	once      sync.Once
 }
 
 func NewBlockingQueue[T any]() *BlockingQueue[T] {
@@ -104,8 +105,7 @@ func (q *BlockingQueue[T]) DequeueWithTimeout(timeout time.Duration) (T, error) 
 }
 
 func (q *BlockingQueue[T]) Close() {
-	if !q.closed {
-		q.closed = true
+	q.once.Do(func() {
 		close(q.closeCh)
-	}
+	})
 }

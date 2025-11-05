@@ -83,18 +83,18 @@ func (a ProxyAddr) String() string {
 	return net.JoinHostPort(a.Host.String(), a.PortString())
 }
 
-func ParseProxyAddr(addr string) (*ProxyAddr, error) {
+func ParseProxyAddr(addr string) (ProxyAddr, error) {
 	host, p, err := net.SplitHostPort(addr)
 	if err != nil {
-		return nil, err
+		return ProxyAddr{}, err
 	}
 	port, err := strconv.ParseUint(p, 10, 16)
 	if err != nil {
-		return nil, err
+		return ProxyAddr{}, err
 	}
 	addrPort, err := ParseProxyHostPort(host, uint16(port))
 	if err != nil {
-		return nil, err
+		return ProxyAddr{}, err
 	}
 	return addrPort, nil
 }
@@ -114,12 +114,12 @@ func ParseProxyHost(host string) (ProxyHost, error) {
 	}, nil
 }
 
-func ParseProxyHostPort(host string, port uint16) (*ProxyAddr, error) {
+func ParseProxyHostPort(host string, port uint16) (ProxyAddr, error) {
 	proxyHost, err := ParseProxyHost(host)
 	if err != nil {
-		return nil, err
+		return ProxyAddr{}, err
 	}
-	return &ProxyAddr{
+	return ProxyAddr{
 		Host: proxyHost,
 		Port: port,
 	}, nil
