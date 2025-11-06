@@ -104,8 +104,9 @@ func (q *BlockingQueue[T]) DequeueWithTimeout(timeout time.Duration) (T, error) 
 	}
 }
 
-func (q *BlockingQueue[T]) Close() {
+func (q *BlockingQueue[T]) Close() error {
 	q.once.Do(func() {
 		close(q.closeCh)
 	})
+	return nil
 }
