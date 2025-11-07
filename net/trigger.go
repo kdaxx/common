@@ -2,6 +2,7 @@ package net
 
 import (
 	"io"
+	"net"
 )
 
 var (
@@ -26,14 +27,14 @@ func NewWriterLambda(writerFun func(p []byte) (n int, err error)) *WriterLambda 
 }
 
 type PacketWriterLambda struct {
-	packetWriterFun func(b []byte, addr ProxyAddr) (int, error)
+	packetWriterFun func(b []byte, addr net.Addr) (int, error)
 }
 
-func (p *PacketWriterLambda) WriteTo(b []byte, addr ProxyAddr) (int, error) {
+func (p *PacketWriterLambda) WriteTo(b []byte, addr net.Addr) (int, error) {
 	return p.packetWriterFun(b, addr)
 }
 
-func NewPacketWriterLambda(packetWriterFun func(b []byte, addr ProxyAddr) (int, error)) *PacketWriterLambda {
+func NewPacketWriterLambda(packetWriterFun func(b []byte, addr net.Addr) (int, error)) *PacketWriterLambda {
 	return &PacketWriterLambda{
 		packetWriterFun: packetWriterFun,
 	}
@@ -54,14 +55,14 @@ func NewReaderLambda(handleEchoFun func(p []byte) (n int, err error)) *ReaderLam
 }
 
 type PacketReaderLambda struct {
-	packetReaderFun func(b []byte) (int, ProxyAddr, error)
+	packetReaderFun func(b []byte) (int, net.Addr, error)
 }
 
-func (p *PacketReaderLambda) ReadFrom(b []byte) (int, ProxyAddr, error) {
+func (p *PacketReaderLambda) ReadFrom(b []byte) (int, net.Addr, error) {
 	return p.packetReaderFun(b)
 }
 
-func NewPacketReaderLambda(handleEchoFun func(b []byte) (int, ProxyAddr, error)) *PacketReaderLambda {
+func NewPacketReaderLambda(handleEchoFun func(b []byte) (int, net.Addr, error)) *PacketReaderLambda {
 	return &PacketReaderLambda{
 		packetReaderFun: handleEchoFun,
 	}
