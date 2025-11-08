@@ -106,7 +106,7 @@ func (a *hostProcessor) readHostFrom(r io.Reader) (ProxyHost, error) {
 		if !addrFrom4.IsValid() {
 			return nil, ErrInvalidHost
 		}
-		return &ProxyIP{
+		return ProxyIP{
 			NetIP: addrFrom4,
 		}, nil
 	case a.hostFlag.V6:
@@ -118,7 +118,7 @@ func (a *hostProcessor) readHostFrom(r io.Reader) (ProxyHost, error) {
 		if !addrFrom16.IsValid() {
 			return nil, ErrInvalidHost
 		}
-		return &ProxyIP{
+		return ProxyIP{
 			NetIP: addrFrom16,
 		}, nil
 	case a.hostFlag.FQDN:

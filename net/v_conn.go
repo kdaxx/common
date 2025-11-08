@@ -92,7 +92,7 @@ func (c *virtualPacketConn) Close() error {
 	return nil
 }
 
-// NewPacketConnPipe returns a virtual packet conn
+// NewPacketConnPipe returns a pipe with double virtual packet connections.
 func NewPacketConnPipe() (net.PacketConn, net.PacketConn) {
 	c1 := &virtualPacketConn{
 		ch:   make(chan packet),

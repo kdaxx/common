@@ -13,7 +13,7 @@ func TestIP4PortFirstAddrSerializer(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = p.WriteAddrTo(buffer, *addr)
+	err = p.WriteAddrTo(buffer, addr)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -37,7 +37,7 @@ func TestIP6PortFirstAddrSerializer(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = p.WriteAddrTo(buffer, *addr)
+	err = p.WriteAddrTo(buffer, addr)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -61,7 +61,7 @@ func TestFQDNPortFirstAddrSerializer(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = p.WriteAddrTo(buffer, *addr)
+	err = p.WriteAddrTo(buffer, addr)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -85,7 +85,7 @@ func TestIP4HostFirstAddrSerializer(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = p.WriteAddrTo(buffer, *addr)
+	err = p.WriteAddrTo(buffer, addr)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -109,7 +109,7 @@ func TestIP6HostFirstAddrSerializer(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = p.WriteAddrTo(buffer, *addr)
+	err = p.WriteAddrTo(buffer, addr)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -133,7 +133,7 @@ func TestFQDNHostFirstAddrSerializer(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = p.WriteAddrTo(buffer, *addr)
+	err = p.WriteAddrTo(buffer, addr)
 	if err != nil {
 		t.Fatal(err)
 	}

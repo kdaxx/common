@@ -19,27 +19,27 @@ type ProxyIP struct {
 	NetIP netip.Addr
 }
 
-func (a *ProxyIP) IP() netip.Addr {
+func (a ProxyIP) IP() netip.Addr {
 	return a.NetIP
 }
 
-func (a *ProxyIP) FQDN() string {
+func (a ProxyIP) FQDN() string {
 	return ""
 }
 
-func (a *ProxyIP) IsIP() bool {
+func (a ProxyIP) IsIP() bool {
 	return true
 }
 
-func (a *ProxyIP) IsFQDN() bool {
+func (a ProxyIP) IsFQDN() bool {
 	return false
 }
 
-func (a *ProxyIP) IsValid() bool {
+func (a ProxyIP) IsValid() bool {
 	return a.IsIP()
 }
 
-func (a *ProxyIP) String() string {
+func (a ProxyIP) String() string {
 	return a.NetIP.String()
 }
 
@@ -66,7 +66,9 @@ func (p ProxyFQDN) String() string {
 }
 
 type ProxyAddr struct {
+	// proxy host: domain or ip
 	Host ProxyHost
+	// proxy port: 0~65535
 	Port uint16
 }
 
