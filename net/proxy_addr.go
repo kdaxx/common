@@ -70,6 +70,8 @@ type ProxyAddr struct {
 	Host ProxyHost
 	// proxy port: 0~65535
 	Port uint16
+	// network
+	Net Network
 }
 
 func (a ProxyAddr) PortString() string {
@@ -77,7 +79,7 @@ func (a ProxyAddr) PortString() string {
 }
 
 func (a ProxyAddr) Network() string {
-	return "proxy"
+	return a.Net.String()
 }
 
 func (a ProxyAddr) String() string {
@@ -95,6 +97,38 @@ func ParseProxyAddr(addr string) (ProxyAddr, error) {
 		return ProxyAddr{}, err
 	}
 	addrPort, err := ParseProxyHostPort(host, uint16(port))
+	if err != nil {
+		return ProxyAddr{}, err
+	}
+	return addrPort, nil
+}
+
+func ParseTCPProxyAddr(addr string) (ProxyAddr, error) {
+	host, p, err := net.SplitHostPort(addr)
+	if err != nil {
+		return ProxyAddr{}, err
+	}
+	port, err := strconv.ParseUint(p, 10, 16)
+	if err != nil {
+		return ProxyAddr{}, err
+	}
+	addrPort, err := ParseTCPProxyHostPort(host, uint16(port))
+	if err != nil {
+		return ProxyAddr{}, err
+	}
+	return addrPort, nil
+}
+
+func ParseUDPProxyAddr(addr string) (ProxyAddr, error) {
+	host, p, err := net.SplitHostPort(addr)
+	if err != nil {
+		return ProxyAddr{}, err
+	}
+	port, err := strconv.ParseUint(p, 10, 16)
+	if err != nil {
+		return ProxyAddr{}, err
+	}
+	addrPort, err := ParseUDPProxyHostPort(host, uint16(port))
 	if err != nil {
 		return ProxyAddr{}, err
 	}
@@ -126,3 +160,38 @@ func ParseProxyHostPort(host string, port uint16) (ProxyAddr, error) {
 		Port: port,
 	}, nil
 }
+
+func ParseTCPProxyHostPort(host string, port uint16) (ProxyAddr, error) {
+	proxyHost, err := ParseProxyHost(host)
+	if err != nil {
+		return ProxyAddr{}, err
+	}
+	return ProxyAddr{
+		Host: proxyHost,
+		Port: port,
+		Net:  TCP,
+	}, nil
+}
+
+func ParseUDPProxyHostPort(host string, port uint16) (ProxyAddr, error) {
+	proxyHost, err := ParseProxyHost(host)
+	if err != nil {
+		return ProxyAddr{}, err
+	}
+	return ProxyAddr{
+		Host: proxyHost,
+		Port: port,
+		Net:  UDP,
+	}, nil
+}
+
+type Network string
+
+func (n Network) String() string {
+	return string(n)
+}
+
+const (
+	TCP Network = "tcp"
+	UDP Network = "udp"
+)
