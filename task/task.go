@@ -12,10 +12,11 @@ type task struct {
 }
 
 type Group struct {
-	tasks         []task
-	cleanup       func(err error)
-	fastErrReturn bool
-	parallelQueue chan struct{}
+	tasks          []task
+	cleanup        func(err error)
+	waitForCleanup bool
+	fastErrReturn  bool
+	parallelQueue  chan struct{}
 }
 
 func (g *Group) AppendWithName(name string, f func(ctx context.Context) error) *Group {
@@ -35,6 +36,11 @@ func (g *Group) Append(f func(ctx context.Context) error) *Group {
 
 func (g *Group) Cleanup(f func(err error)) *Group {
 	g.cleanup = f
+	return g
+}
+
+func (g *Group) WaitForCleanup() *Group {
+	g.waitForCleanup = true
 	return g
 }
 
@@ -116,6 +122,9 @@ func (g *Group) Run(ctx context.Context) error {
 		g.cleanup(returnError)
 	}
 
+	if g.waitForCleanup {
+		<-taskWait.Wait()
+	}
 	return returnError
 }
 

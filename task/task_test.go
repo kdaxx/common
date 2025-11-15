@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net"
 	"testing"
 	"time"
 )
@@ -120,5 +121,31 @@ func TestCleanupTask(t *testing.T) {
 	}).Run(context.Background())
 	if err != nil && !cleanup {
 		t.Fatal("TestCleanupTask err:", err)
+	}
+}
+
+func TestWaitForCleanup(t *testing.T) {
+	ctxWaitFor, cancelFunc := context.WithCancel(context.Background())
+	defer cancelFunc()
+
+	waitFor := false
+	_ = NewGroup().FastErrReturn().WaitForCleanup().Append(func(ctx context.Context) error {
+		fmt.Println("fast return")
+		return net.ErrClosed
+	}).Append(func(ctx context.Context) error {
+		select {
+		case <-ctxWaitFor.Done():
+		}
+		time.Sleep(1 * time.Second)
+		waitFor = true
+		return net.ErrClosed
+	}).Cleanup(func(err error) {
+		// cleanup can cancel/clean other goroutine when task failed/completed/conn closed...
+		cancelFunc()
+	}).
+		Run(context.Background())
+
+	if !waitFor {
+		t.Error("TestWaitForCleanup err:")
 	}
 }
