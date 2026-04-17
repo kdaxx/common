@@ -14,7 +14,7 @@ func MkdirWithFilePath(path string) error {
 func Mkdir(dir string) error {
 	_, err := os.Stat(dir)
 
-	// 若目录不存在，创建该路径下的所有目录
+	// create all dir if it's not exist
 	if err != nil && os.IsNotExist(err) {
 		err := os.MkdirAll(dir, 0755)
 		if err != nil {
